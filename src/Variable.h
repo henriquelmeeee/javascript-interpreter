@@ -18,7 +18,8 @@ class Variable : public ASTNode, public ForwardVariable {
       return init.type;
     };
 
-    Variable(Value _init, std::string _identifier="default") : init(_init), identifier(_identifier){
+    Variable(Value _init, std::string _identifier) : init(_init){
+      identifier = _identifier;
       cout << "Variable initialized with value " << _init.as_string() << endl;
     }
 

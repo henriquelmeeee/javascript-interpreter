@@ -1,6 +1,9 @@
-#include "Forward.h"
-#include "AST.h"
+#pragma once
 
+#ifndef OBJECTS
+#define OBJECTS
+
+#include "Forward.h"
 /*class Block : public ASTNode {
   public:
     virtual std::string class_name() const { return "Block"; }
@@ -10,6 +13,8 @@
     }
 };*/
 
+
+#include "AST.h"
 
 class Literal : public ASTNode {
   public:
@@ -30,3 +35,4 @@ class Literal : public ASTNode {
 
     Literal();
 };
+#endif

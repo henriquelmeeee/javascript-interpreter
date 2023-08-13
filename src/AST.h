@@ -22,14 +22,35 @@ class ASTNode;
 
 class ForwardVariable {
   public:
+    std::string identifier = 0;
     virtual ValueType get_type() const = 0;
 };
 
 class ForwardScope {
   public:
+    std::vector<ForwardVariable*> m_string_variables;
     virtual bool append_variable(ForwardVariable* _variable) = 0;
     virtual Value execute(ForwardScope* context) = 0;
 };
+
+enum NonfatalErrorType {
+  VARIABLE_ALREADY_EXISTS,
+  UNKNOWN,
+};
+
+void throw_nonfatal_error(NonfatalErrorType error, ASTNode* node) {
+  switch(error) {
+    case VARIABLE_ALREADY_EXISTS:
+      {
+        std::cerr << "Non-fatal error: Variable " << ((ForwardVariable*)node)->identifier << " already declared, ignoring." << endl;
+        break;
+      };
+    default:
+      {
+        std::cerr << "Non-fatal unknown error. Continuing." << endl;
+      };
+  };
+}
 
 class Value {
   private:
@@ -151,5 +172,8 @@ class Program : public ASTNode {
       return true;
     }
 };
+
+#include "Objects.h"
+
 
 #endif

@@ -7,6 +7,16 @@
 #include "AST.h"
 
 class Variable;
+class ForwardScope;
+
+bool has_string_variable(ForwardScope* context, std::string identifier) {
+  for(auto variable : context->m_string_variables) {
+    if(variable->identifier == identifier) {
+      return true;
+    }
+  }
+  return false;
+}
 
 class Scope : public ASTNode, public ForwardScope {
   public:
@@ -43,9 +53,11 @@ class Scope : public ASTNode, public ForwardScope {
       switch(_variable->get_type()) {
         case STRING:
           {
-            /*if(find_string_variable(_variable->identifier)) {
-              // TODO throw error: variable already declared, tries to ignore or something
-            }*/
+            if(has_string_variable(this, _variable->identifier)) {
+              throw_nonfatal_error(VARIABLE_ALREADY_EXISTS, (ASTNode*)_variable);
+              return false;
+              break;
+            }
             m_string_variables.push_back(_variable);
             cout << "String variable successfully mapped" << endl;
             break;
