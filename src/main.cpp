@@ -1,5 +1,8 @@
 #include "Forward.h"
+#include "AST.h"
 #include "Objects.h"
+#include "Variable.h"
+#include "Scope.h"
 
 int main() {
   Program* ast = new Program();

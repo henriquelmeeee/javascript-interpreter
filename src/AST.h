@@ -1,8 +1,11 @@
+#pragma once
+
 #ifndef AST
 #define AST
 
 #include "Forward.h"
 
+class Variable;
 class Scope;
 
 enum ValueType {
@@ -12,6 +15,20 @@ enum ValueType {
   UNDEFINED,
   NUMBER,
   DOUBLE,
+};
+
+class Value;
+class ASTNode;
+
+class ForwardVariable {
+  public:
+    virtual ValueType get_type() const = 0;
+};
+
+class ForwardScope {
+  public:
+    virtual bool append_variable(ForwardVariable* _variable) = 0;
+    virtual Value execute(ForwardScope* context) = 0;
 };
 
 class Value {
@@ -105,6 +122,7 @@ class Value {
     virtual std::string class_name() const { return as_string(); }
 };
 
+
 class ASTNode {
   public:
 
@@ -113,7 +131,7 @@ class ASTNode {
     ASTNode() {
 
     }
-    virtual Value execute(Scope* context) {
+    virtual Value execute(ForwardScope* context) {
       return Value(_NULL);
     }
 };
