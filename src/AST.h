@@ -7,6 +7,7 @@
 
 class Variable;
 class Scope;
+class Identifier;
 
 enum ValueType {
   STRING,
@@ -18,12 +19,31 @@ enum ValueType {
 };
 
 class Value;
+
 class ASTNode;
+class ForwardScope;
+
+class ForwardIdentifier {
+  public:
+    std::string value;
+
+    virtual Value execute(ForwardScope* context) = 0;
+    virtual std::string get() = 0;
+};
 
 class ForwardVariable {
   public:
-    std::string identifier = 0;
-    virtual ValueType get_type() const = 0;
+    ForwardIdentifier* identifier = 0;
+    virtual ValueType get_type() = 0;
+    virtual Value execute(ForwardScope* context) = 0;
+};
+
+class ForwardFunction {
+  public:
+    ForwardIdentifier* identifier;
+
+    virtual Value execute(ForwardScope* context) = 0;
+    virtual bool append(ASTNode* node) = 0;
 };
 
 class ForwardScope {
@@ -31,6 +51,7 @@ class ForwardScope {
     std::vector<ForwardVariable*> m_string_variables;
     virtual bool append_variable(ForwardVariable* _variable) = 0;
     virtual Value execute(ForwardScope* context) = 0;
+    virtual Value get_variable(std::string _value) = 0;
 };
 
 enum NonfatalErrorType {
@@ -67,13 +88,13 @@ class Value {
   public:
     std::string as_string() const {
       switch(type) {
-        case STRING:        return "String";
-        case BOOLEAN:       return "Boolean";
-        case _NULL:         return "null";
-        case UNDEFINED:     return "undefined";
-        case NUMBER:        return "Number";
-        case DOUBLE:        return "Double";
-        default:            return "Unknown";
+        case STRING:        return "String"; break;
+        case BOOLEAN:       return "Boolean"; break;
+        case _NULL:         return "null"; break;
+        case UNDEFINED:     return "undefined"; break;
+        case NUMBER:        return "Number"; break;
+        case DOUBLE:        return "Double"; break;
+        default:            return "Unknown"; break;
       };
     };
 
@@ -170,6 +191,25 @@ class Program : public ASTNode {
     virtual bool append(ASTNode* node) {
       this->body.push_back(node);
       return true;
+    }
+};
+
+class Identifier : public ASTNode, public ForwardIdentifier {
+  public:
+    virtual std::string class_name() const { return "Identifier"; }
+    std::string value;
+
+    Identifier(std::string _value) : value(_value) {
+
+    }
+
+    virtual Value execute(ForwardScope* context) {
+      return Value(1);
+      // TODO variable execution by identifier
+    }
+
+    virtual std::string get() {
+      return this->value;
     }
 };
 

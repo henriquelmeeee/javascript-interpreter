@@ -3,14 +3,18 @@
 #include "Objects.h"
 #include "Variable.h"
 #include "Scope.h"
+#include "Function.h"
 
 int main() {
   Program* ast = new Program();
 
-  Variable* var_main = new Variable(Value(true), "teste");
-  Variable* var_second = new Variable(Value(true), "teste");
+  Variable* var_main = new Variable(Value(true), new Identifier("a"));
+  Function* func_main = new Function(new Identifier("foo"));
 
-  Scope* main_scope = new Scope({var_main, var_second});
+  func_main->append(var_main);
+  //Variable* var_second = new Variable(Value(true), new ForwardIdentifier("a"));
+
+  Scope* main_scope = new Scope({func_main});
 
   ast->append(main_scope);
   main_scope->execute(main_scope);

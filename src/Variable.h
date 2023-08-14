@@ -11,20 +11,20 @@ class Scope;
 class Variable : public ASTNode, public ForwardVariable {
   public:
     virtual std::string class_name() const { return "Variable"; }
-    std::string identifier;
+    ForwardIdentifier* identifier;
     Value init;
 
-    virtual ValueType get_type() const override {
+    virtual ValueType get_type() {
       return init.type;
     };
 
-    Variable(Value _init, std::string _identifier) : init(_init){
+    Variable(Value _init, ForwardIdentifier* _identifier) : init(_init){
       identifier = _identifier;
-      cout << "Variable initialized with value " << _init.as_string() << endl;
+      cout << "[INIT] Variable initialized with value " << _init.as_string() << endl;
     }
 
     virtual Value execute(ForwardScope* context) {
-      cout << "Variable init: " << init.as_string() << endl;
+      cout << "[Variable->execute()] Value type: " << init.as_string() << endl;
       context->append_variable(this);
       return init;
     }

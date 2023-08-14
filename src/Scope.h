@@ -9,9 +9,9 @@
 class Variable;
 class ForwardScope;
 
-bool has_string_variable(ForwardScope* context, std::string identifier) {
+bool has_string_variable(ForwardScope* context, ForwardIdentifier* identifier) {
   for(auto variable : context->m_string_variables) {
-    if(variable->identifier == identifier) {
+    if(variable->identifier->get() == identifier->get()) {
       return true;
     }
   }
@@ -40,11 +40,14 @@ class Scope : public ASTNode, public ForwardScope {
     virtual Value execute(ForwardScope* context) {
       Value last_value(UNDEFINED);
       for(auto element : elements) {
-        last_value = element->execute(this);
+        cout << "[Scope->execute()] Executing element typed as " << element->class_name() << endl;
+        Value returned_value = element->execute(context);
+        cout << "[Scope->execute()] Returned " << returned_value.as_string() << endl;
         delete element;
+        
       }
       cout << "Scope execution returned last value as " << last_value.as_string() << endl;
-      return last_value;
+      return Value(UNDEFINED);
     }
 
     //virtual Value execute(ForwardScope* context);
@@ -81,6 +84,16 @@ class Scope : public ASTNode, public ForwardScope {
           }
       }
       return true;
+    }
+
+    virtual Value get_variable(std::string name) {
+      // TODO fazer iteração sobre todos tipos possiveis de variaveis no escopo atual
+      return Value(1);
+    }
+
+    virtual Value get_string_variable(std::string name) {
+      // TODO esse é pra strings em especifico
+      return Value(1);
     }
     
     //virtual bool append_variable(Variable* _variable);
