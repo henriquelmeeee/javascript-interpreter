@@ -46,7 +46,7 @@ class Scope : public ASTNode, public ForwardScope {
         delete element;
         
       }
-      cout << "Scope execution returned last value as " << last_value.as_string() << endl;
+      //cout << "Scope execution returned last value as " << last_value.as_string() << endl;
       return Value(UNDEFINED);
     }
 

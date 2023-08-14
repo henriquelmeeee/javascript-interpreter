@@ -17,10 +17,10 @@ class Function : public ASTNode, public ForwardFunction {
 
     virtual Value execute(ForwardScope* context) {
       for(auto element : this->body) {
-        cout << "Executing elements in " << identifier->get() << endl;
+        cout << "[" << identifier->get() << "()->execute()] Executing elements in " << identifier->get() << endl;
         if(element->class_name() == "Return") // TODO criar um ObjectType no nó ASTNode pra checar isso 
           return element->execute(context);
-        element->execute(context);
+        return element->execute(context); // TODO remove "return" in this instruction
       }
       return Value(UNDEFINED);
     }
