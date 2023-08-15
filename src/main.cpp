@@ -4,8 +4,14 @@
 #include "Variable.h"
 #include "Scope.h"
 #include "Function.h"
+#include "Lexer.h"
 
 int main() {
+  special_chars = {'=', ' ', ';'};
+
+  Lexer lex(reinterpret_cast<const char*>("let a = 5;"));
+  while(lex.NextToken());
+
   Program* ast = new Program();
 
   Variable* var_main = new Variable(Value(true), new Identifier("a"));
