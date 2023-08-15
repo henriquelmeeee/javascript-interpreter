@@ -10,6 +10,8 @@ enum TokenType {
   EQUALS,
   END,
   _STRING,
+  KEYWORD,
+  IDENTIFIER,
 };
 
 class Token {

@@ -5,7 +5,7 @@
 
 #include "AST.h"
 
-void Breakpoint(ASTNode* who, ForwardScope* context);
+//void Breakpoint(ASTNode* who, ForwardScope* context);
 
 
 #endif

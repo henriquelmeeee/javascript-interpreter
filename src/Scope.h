@@ -51,6 +51,11 @@ class Scope : public ASTNode, public ForwardScope {
       return Value(UNDEFINED);
     }
 
+    virtual bool append(ASTNode* node) {
+      this->elements.push_back(node);
+      return true;
+    }
+
     //virtual Value execute(ForwardScope* context);
 
     virtual bool append_variable(ForwardVariable* _variable) {

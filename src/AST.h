@@ -213,8 +213,8 @@ class Identifier : public ASTNode, public ForwardIdentifier {
     }
 
     virtual Value execute(ForwardScope* context) {
-      if(bp)
-        Breakpoint((ASTNode*)this, context);
+      //if(bp)
+        //Breakpoint((ASTNode*)this, context);
       return Value(1);
       // TODO variable execution by identifier
     }

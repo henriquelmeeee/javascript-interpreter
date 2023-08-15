@@ -1,2 +1,2 @@
-g++ main.cpp Breakpoint.cpp -o main
+g++ main.cpp -o main
 ./main
