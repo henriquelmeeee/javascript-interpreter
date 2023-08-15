@@ -4,6 +4,8 @@
 #define OBJECTS
 
 #include "Forward.h"
+#include "Breakpoint.h"
+
 /*class Block : public ASTNode {
   public:
     virtual std::string class_name() const { return "Block"; }

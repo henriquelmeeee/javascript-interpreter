@@ -9,7 +9,7 @@
 enum TokenType {
   EQUALS,
   END,
-  STRING,
+  _STRING,
 };
 
 class Token {
@@ -20,17 +20,16 @@ class Token {
     Token(TokenType _type, const char* _ch) : type(_type), ch(_ch) {}
 };
 
-extern std::vector<char> special_chars;
-
 class Lexer {
   public:
     const char* code;
     unsigned short position;
     std::vector<Token> tokens;
     std::string buffer;
+    std::vector<char> special_chars;
     
-    Lexer(const char* _code) : code(_code),  position(0) {
-      cout << "Lexer object created" << endl;
+    Lexer(const char* _code, std::vector<char> _special_chars) : code(_code),  position(0), special_chars(_special_chars) {
+      cout << "[LEXER] Lexer object created" << endl;
     }
 
     char inline Current() {
@@ -38,18 +37,18 @@ class Lexer {
     }
 
     bool handle_possible_keyword(const char* str) {
-      return true;
+      return false;
     }
 
     bool Next() {
-      ++position;
+      position++;
       if(code[position] == 0)
         return false;
       return true;
     }
 
     bool is_special_char(char ch) {
-      if(std::find(special_chars.begin(), special_chars.end(), special_chars) == special_chars.end())
+      if(std::find(special_chars.begin(), special_chars.end(), ch) == special_chars.end())
         return false;
       return true;
     }
@@ -58,14 +57,18 @@ class Lexer {
       switch(ch) {
         case '=':
           {
-            cout << "EQUALS token found" << endl;
+            cout << "[LEXER] EQUALS" << endl;
             tokens.push_back(Token(EQUALS, &ch));
             return true; break;
           };
         case ';':
           {
-            cout << "SEMICOLON token found" << endl;
+            cout << "[LEXER] SEMICOLON" << endl;
             tokens.push_back(Token(END, &ch));
+            return true; break;
+          };
+        case ' ':
+          {
             return true; break;
           };
       };
@@ -74,7 +77,8 @@ class Lexer {
     }
 
     bool NextToken() {
-      cout << "NextToken() called" << endl;
+      cout << "[LEXER] NextToken() called" << endl;
+      cout << "[LEXER] Actual char: " << Current() << endl << endl;
       if(is_special_char(Current())) {
         handle_special_char(Current());
         if(!Next())
@@ -82,21 +86,25 @@ class Lexer {
         return true;
       }
       
-      while(!is_special_char(Current())) {
+      while(! (is_special_char(Current())) ) {
         buffer += Current();
-        if(!Next())
+        if(!Next()) {
           return false;
+        }
       }
+      
+      cout << "[LEXER] Valid buffer found: " << buffer << endl;
 
       if(!(handle_possible_keyword(buffer.c_str()))) {
-        tokens.push_back(Token(STRING, buffer.c_str()));
+        tokens.push_back(Token(_STRING, buffer.c_str()));
       }
 
+      buffer.clear();
+      
       if(!Next())
         return false;
 
       return true;
-
     }
 };
 

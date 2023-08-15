@@ -22,12 +22,13 @@ class Scope : public ASTNode, public ForwardScope {
   public:
     
     std::vector<ASTNode*> elements;
+    ForwardScope* parent;
 
     std::vector<ForwardVariable*> m_string_variables = {};
     std::vector<ForwardVariable*> m_boolean_variables = {};
     std::vector<ForwardVariable*> m_number_variables = {};
 
-    Scope(std::vector<ASTNode*> _elements) : elements(_elements) {
+    Scope(std::vector<ASTNode*> _elements, ForwardScope* _parent) : elements(_elements), parent(_parent) {
 
     }
 

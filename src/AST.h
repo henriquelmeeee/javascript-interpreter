@@ -25,6 +25,7 @@ class ForwardScope;
 
 class ForwardIdentifier {
   public:
+    bool bp;
     std::string value;
 
     virtual Value execute(ForwardScope* context) = 0;
@@ -33,6 +34,7 @@ class ForwardIdentifier {
 
 class ForwardVariable {
   public:
+    bool bp;
     ForwardIdentifier* identifier = 0;
     virtual ValueType get_type() = 0;
     virtual Value execute(ForwardScope* context) = 0;
@@ -40,6 +42,7 @@ class ForwardVariable {
 
 class ForwardFunction {
   public:
+    bool bp;
     ForwardIdentifier* identifier;
 
     virtual Value execute(ForwardScope* context) = 0;
@@ -48,6 +51,7 @@ class ForwardFunction {
 
 class ForwardScope {
   public:
+    bool bp;
     std::vector<ForwardVariable*> m_string_variables;
     virtual bool append_variable(ForwardVariable* _variable) = 0;
     virtual Value execute(ForwardScope* context) = 0;
@@ -157,7 +161,8 @@ class Value {
       };
     }
 
-    virtual Value execute() {
+    virtual Value execute(ForwardScope* context) {
+
       return *this;
     }
 
@@ -167,7 +172,7 @@ class Value {
 
 class ASTNode {
   public:
-
+    bool bp;
     virtual std::string class_name() const { return "Generic AST Node"; }
 
     ASTNode() {
@@ -178,10 +183,13 @@ class ASTNode {
     }
 };
 
+#include "Breakpoint.h"
+
 class Program : public ASTNode {
   public:
+    bool bp;
 
-    virtual std::string class_name() const { return "Program"; }
+    virtual std::string class_name() const { return "Main Program"; }
     std::vector<ASTNode*> body;
 
     Program() {
@@ -196,6 +204,7 @@ class Program : public ASTNode {
 
 class Identifier : public ASTNode, public ForwardIdentifier {
   public:
+    bool bp;
     virtual std::string class_name() const { return "Identifier"; }
     std::string value;
 
@@ -204,6 +213,8 @@ class Identifier : public ASTNode, public ForwardIdentifier {
     }
 
     virtual Value execute(ForwardScope* context) {
+      if(bp)
+        Breakpoint((ASTNode*)this, context);
       return Value(1);
       // TODO variable execution by identifier
     }
