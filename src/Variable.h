@@ -25,7 +25,6 @@ class Variable : public ASTNode, public ForwardVariable {
 
     virtual Value execute(ForwardScope* context) {
       cout << "[Variable->execute()] Value type: " << init.as_string() << endl;
-      context->append_variable(this);
       return init;
     }
 };

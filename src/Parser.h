@@ -36,15 +36,17 @@ class Parser {
     }
 
     void NextToken() {
-      if(tokens.size()-1 < current+1) {
+      if(current + 1 >= tokens.size()) {
         cout << "EOL not found\n"; exit(1);
       }
       ++current;
     }
 
     void Consume(TokenType type) {
-      if(tokens[current].type == type)
+      if(tokens[current].type == type) {
+        NextToken();
         return;
+      }
       cout << "Expected '" << type << "', get '" << tokens[current].type << "'\n";
       exit(1);
     }

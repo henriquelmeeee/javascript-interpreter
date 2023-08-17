@@ -12,22 +12,32 @@ std::vector<char> special_chars = {'=', ' ', ';'};
 
 int main() {
 
-  Lexer lex(reinterpret_cast<const char*>("let a = 5;"), special_chars);
-  while(lex.NextToken());
+  Program* ast = new Program();
 
-  Parser* parser = new Parser({Token(KEYWORD, "let"), Token(IDENTIFIER, "teste"), Token(END, ";")});
-  while(parser->execute());
-  Program* ast = parser->program;
-  //Identifier* of_varmain = new Identifier("a");
+  Object* main_object = new Object();
+  Object* second_object = new Object();
 
-  //Variable* var_main = new Variable(Value(true), of_varmain);
-  //Function* func_main = new Function(new Identifier("foo"));
+  Variable* main_var = new Variable(Value(5), new Identifier("a"));
+  Variable* second_var = new Variable(Value(true), new Identifier("b"));
 
-  //func_main->append(var_main);
-  //Variable* var_second = new Variable(Value(true), new ForwardIdentifier("a"));
+  main_object->append_variable(main_var);
+  second_object->append_variable(second_var);
 
-  //Scope* main_scope = new Scope({func_main}, nullptr);
+  Member* main_member = new Member(
+    main_object,
+    (ASTNode*)main_var
+  );
 
-  //ast->append(main_scope);
-  ast->body[0]->execute(nullptr);
+  Member* second_member = new Member(
+    second_object,
+    (ASTNode*)second_var
+  );
+
+  Scope* main_scope = new Scope({}, nullptr);
+  main_scope->append(main_member);
+  main_scope->append(second_member);
+  ast->append(main_scope);
+
+  main_scope->execute(main_scope);
+
 }
