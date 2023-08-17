@@ -9,6 +9,32 @@
 #include "Parser.h"
 
 std::vector<char> special_chars = {'=', ' ', ';'};
+std::vector<ASTNode*> g_stack = {};
+
+void print_indent(int indent) {
+  for(int i = 0; i<indent; i++) {
+    cout << ' ';
+  }
+}
+
+void dump_stack() {
+  int indent = 0;
+  for(int i = 0; i<g_stack.size(); i++) {
+    ASTNode* node = g_stack[i];
+    if(node == nullptr)
+      continue;
+
+    if(node->class_name() == "Function") {
+      ForwardFunction* func = (ForwardFunction*)node;
+      print_indent(indent);
+
+      cout << "Function " << func->identifier->value << "() called;" << endl;
+
+      indent+=2;
+    }
+    
+  }
+}
 
 int main() {
 
@@ -18,10 +44,12 @@ int main() {
   Object* second_object = new Object();
 
   Variable* main_var = new Variable(Value(5), new Identifier("a"));
-  Variable* second_var = new Variable(Value(true), new Identifier("b"));
+  Function* func = new Function(new Identifier("b"));
+
+  func->append(new Variable(Value(true), new Identifier("c")));
 
   main_object->append_variable(main_var);
-  second_object->append_variable(second_var);
+  second_object->append_function(func);
 
   Member* main_member = new Member(
     main_object,
@@ -30,7 +58,7 @@ int main() {
 
   Member* second_member = new Member(
     second_object,
-    (ASTNode*)second_var
+    (ASTNode*)func
   );
 
   Scope* main_scope = new Scope({}, nullptr);
@@ -39,5 +67,7 @@ int main() {
   ast->append(main_scope);
 
   main_scope->execute(main_scope);
+  cout << "Stack dump:" << endl;
+  dump_stack();
 
 }

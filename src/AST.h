@@ -43,11 +43,13 @@ class ForwardVariable {
 class ForwardFunction {
   public:
     bool bp;
-    ForwardIdentifier* identifier;
+    Identifier* identifier;
 
     virtual Value execute(ForwardScope* context) = 0;
     virtual bool append(ASTNode* node) = 0;
 };
+
+extern std::vector<ASTNode*> g_stack;
 
 class ForwardScope {
   public:
@@ -209,7 +211,7 @@ class Identifier : public ASTNode, public ForwardIdentifier {
     std::string value;
 
     Identifier(std::string _value) : value(_value) {
-
+      value = _value;
     }
 
     virtual Value execute(ForwardScope* context) {

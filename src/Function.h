@@ -16,6 +16,7 @@ class Function : public ASTNode, public ForwardFunction {
     }
 
     virtual Value execute(ForwardScope* context) {
+      g_stack.push_back((ASTNode*)new Function(identifier));
       for(auto element : this->body) {
         cout << "[" << identifier->get() << "()->execute()] Executing elements in " << identifier->get() << endl;
         if(element->class_name() == "Return") // TODO criar um ObjectType no nó ASTNode pra checar isso 
