@@ -16,9 +16,7 @@ class ASTNode {
     virtual Value execute(Scope* s);
 };
 
-class Identifier {
-  public:
-};
+
 
 class VariableDeclaration;
 
@@ -30,6 +28,35 @@ class Scope {
     virtual Value execute(Scope* s);
 };
 
+
+class Identifier {
+  public:
+    std::string m_identifier;
+
+    virtual Value execute(Scope* s);
+};
+
+class ExpressionStatement {
+  public:
+    ASTNode* m_expression;
+
+    virtual Value execute(Scope* s);
+};
+
+enum Operator {
+  Plus,
+};
+
+class AssignmentExpression {
+  public:
+    Operator m_op;
+    ASTNode* m_lhs;
+    ASTNode* m_rhs;
+
+    virtual Value execute(Scope* s);
+};
+
+
 class VariableDeclaration : public ASTNode {
   public:
     virtual std::string class_name() { return "VariableDeclaration"; }
@@ -37,7 +64,7 @@ class VariableDeclaration : public ASTNode {
     Identifier* name;
     Value* value;
 
-    VariableDeclaration(Identifier _name, Value _value);/* : name(_name), value(_value) {
+    VariableDeclaration(Identifier* _name, Value *_value);/* : name(_name), value(_value) {
     }*/
 
     virtual Value execute(Scope* s);
@@ -78,7 +105,7 @@ class Value {
 
     ValueType type;
 
-    /*Value(const std::string& value) : type(String) {
+    Value(const std::string& value) : type(String) {
       //cout << "STRING VALUE CONSTRUCTOR CALLED" << endl;
       new(&data.stringValue) std::string(value);
     }
@@ -97,7 +124,7 @@ class Value {
       //cout << "DOUBLE VALUE CONSTRUCTOR CALLED" << endl;
       data.doubleValue = value;
       //type = Double;
-    }*/
+    }
 
     Value(const Value& other) : type(other.type) {
       switch(type) {
@@ -109,25 +136,49 @@ class Value {
       }
     }
 
-    /*Value& operator=(const Value& other) {
+    Value& operator=(const Value& other) {
       if(this == &other) return *this;
 
-      if(type == STRING) {
+      if(type == String) {
         data.stringValue.~basic_string();
       }
 
       type = other.type;
 
       switch(type) {
-        case STRING:        new(&data.stringValue) std::string(other.data.stringValue); break;
-        case BOOLEAN:       data.boolValue = other.data.boolValue; break;
-        case NUMBER:        data.intValue = other.data.intValue; break;
-        case DOUBLE:        data.doubleValue = other.data.doubleValue; break;
+        case String:        new(&data.stringValue) std::string(other.data.stringValue); break;
+        case Boolean:       data.boolValue = other.data.boolValue; break;
+        case Number:        data.intValue = other.data.intValue; break;
+        case Double:        data.doubleValue = other.data.doubleValue; break;
         default:            break;
       };
 
       return *this;
-    }*/
+    }
+
+    Value& operator+(const Value& other) {
+      switch(type) {
+        case String:
+          {
+            switch(other.type) {
+              case String:
+                {
+                  //...
+                  break;
+                };
+            }
+            break;
+          };
+        default:
+          {
+            std::cout << "NOT IMPLEMENTED YET\n";
+            exit(1);
+          };
+      };
+
+      return *this;
+
+    }
 
     ~Value() {
       if(type == String) {
