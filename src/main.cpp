@@ -3,11 +3,14 @@
 #include <iostream>
 #include <stdlib.h>
 
+#include "Lexer/Lexer.h"
 #include "Parser/Parser.h"
-#include "Interpreter/Interpreter.h"
 
-#include "AST/Main.h"
+//#include "Interpreter/Interpreter.h"
+
+//#include "AST/Main.h"
 
 int main() {
-  Interpreter interpreter;
+  Lexer lexer("var a = 5;");
+  lexer.run();
 }
