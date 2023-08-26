@@ -1,11 +1,11 @@
 #pragma once
 
 #include "../Forward.h"
+class Scope;
+class Value{};
 #include "../Interpreter/Interpreter.h"
 
-#include "Value.h"
-
-class Scope;
+//#include "Value.h"
 
 class ASTNode {
   public:
@@ -22,7 +22,10 @@ class VariableDeclaration;
 
 class Scope {
   public:
+    Scope* child;
     std::vector<VariableDeclaration*> s_variables;
+
+    virtual Value execute(Scope* s);
 };
 
 class VariableDeclaration : public ASTNode {
@@ -35,9 +38,7 @@ class VariableDeclaration : public ASTNode {
     VariableDeclaration(Identifier _name, Value _value) : name(_name), value(_value) {
     }
 
-    virtual Value execute(Scope* s) {
-
-    }
+    virtual Value execute(Scope* s);
 
 
 };
