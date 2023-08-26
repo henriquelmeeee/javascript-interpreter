@@ -8,3 +8,5 @@
 #include <vector>
 #include <map>
 #include <cctype>
+
+#include "Error.h"
